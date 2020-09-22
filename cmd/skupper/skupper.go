@@ -239,22 +239,20 @@ func NewCmdDelete(newClient cobraFunc) *cobra.Command {
 
 var clientIdentity string
 
-func connectionTokenRun(cmd *cobra.Command, args []string) error {
-	silenceCobra(cmd)
-	err := cli.ConnectorTokenCreateFile(context.Background(), clientIdentity, args[0])
-	if err != nil {
-		return fmt.Errorf("Failed to create connection token: %w", err)
-	}
-	return nil
-}
-
 func NewCmdConnectionToken(newClient cobraFunc) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:    "connection-token <output-file>",
 		Short:  "Create a connection token.  The 'connect' command uses the token to establish a connection from a remote Skupper site.",
 		Args:   requiredArg("output-file"),
 		PreRun: newClient,
-		RunE:   connectionTokenRun,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			silenceCobra(cmd)
+			err := cli.ConnectorTokenCreateFile(context.Background(), clientIdentity, args[0])
+			if err != nil {
+				return fmt.Errorf("Failed to create connection token: %w", err)
+			}
+			return nil
+		},
 	}
 	cmd.Flags().StringVarP(&clientIdentity, "client-identity", "i", types.DefaultVanName, "Provide a specific identity as which connecting skupper installation will be authenticated")
 
