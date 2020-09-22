@@ -12,9 +12,10 @@ type myMock struct {
 }
 
 func TestConnectionTokenRun(t *testing.T) {
-	cli = &myMock{}
 
 	cmd := NewCmdConnectionToken(nil)
+
+	cli = &myMock{}
 
 	cmd.RunE(nil, []string{"tokenName"})
 
