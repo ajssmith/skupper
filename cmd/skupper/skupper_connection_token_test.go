@@ -13,7 +13,10 @@ type myMock struct {
 
 func TestConnectionTokenRun(t *testing.T) {
 	cli = &myMock{}
-	connectionTokenRun(nil, []string{"tokenName"})
+
+	cmd := NewCmdConnectionToken(nil)
+
+	cmd.RunE(nil, []string{"tokenName"})
 
 	//pseudocode:
 	assert(cli.ConnectorTokenCreateFile.calledwith(
